@@ -62,13 +62,10 @@
                     <table class="table room-type">
                         <thead><h4>Dodaj pomieszczenie:</h4></thead>
                         <tr>
-                            <td class="room-button btn btn-secondary">Pomieszczenie</td>
+                            <td class="room-button btn btn-info">Pomieszczenie</td>
                         </tr>
                         <tr>
                             <td class="bathroom-button btn btn-secondary">Łazienka</td>
-                        </tr>
-                        <tr>
-                            <td class="kitchen-button btn btn-secondary">Kuchnia</td>
                         </tr>
                     </table>
                 </div>
@@ -76,7 +73,6 @@
         </div>
         <div class="col-md-6">
             <table>
-                <thead><h4>Dodane:</h4></thead>
                 <tbody class="room-section"></tbody>
             </table>
         </div>
@@ -85,16 +81,21 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
+
         function room_type(name) {
+            let number = 1
             var default_room = $(
                 '<div class="card flex-md-row mb-2 box-shadow h-md-250">' +
                 '<div class="card-body d-flex flex-column align-items-center">' +
                 '<table class="table-result">' +
-                `<thead>${name}</thead>` +
+                `<thead>${name} #${number}</thead>` +
                 '<tbody>' +
+                '<tr class="main-room-element">' +
+                '<tr><td><label for="floor">pow Podłogi:</label></td><td><input id="floor" type="number" value="0"></td>' +
+                '<tr><td><label for="floor">pow Ścian:</label></td><td><input id="floor" type="text" value="0"></td>' +
+                '</tr>' +
                 '<tr>' +
-                '<td class="floor-room-button btn btn-secondary">Podloga</td>' +
-                '<td class="wall-button btn btn-secondary">Sciana</td>' +
+                '<td class="delete-room-button btn btn-primary">Usuń pomieszczenie</td>' +
                 '</tr>' +
                 '</tbody>' +
                 '</table>' +
@@ -105,21 +106,24 @@
         }
 
 
-        // $('.room-button btn btn-secondary').click(function () {
-        //     $(".filled").append(default_room)
-        // })
-
-
         $('.btn').click(function () {
-            if ($(this).attr("class") === "room-button btn btn-secondary") {
+            if ($(this).attr("class") === "room-button btn btn-info") {
+
                 $(".room-section").append(room_type("Pomieszczenie"))
-                console.log("dupa")
             } else if ($(this).attr("class") === "bathroom-button btn btn-secondary") {
                 $(".room-section").append(room_type("Łazienka"))
-            } else {
-                $(".room-section").append(room_type("Kuchnia"))
             }
         })
+
+        $(".room-section").on("click", ".delete-room-button", function (e) {
+            console.log($(e.target).closest("div").parent().remove())
+        })
+
+        // $(".room-section").on("click", ".wall-room-button", function () {
+        //     console.log("dupa");
+        //     let field = $('<tr><td><label for="wall">Ściana: </label><input id="wall" type="number" value="0"></td><td class="btn btn-secondary">Del</td></tr>');
+        //     $(this).parent("tr").append(field.clone())
+        // })
     })
 </script>
 
