@@ -82,6 +82,7 @@
 <script type="text/javascript">
     $(document).ready(function () {
 
+        // Element pomieszczenia
         function room_type(name) {
             let number = 1
             var default_room = $(
@@ -91,8 +92,8 @@
                 `<thead>${name} #${number}</thead>` +
                 '<tbody>' +
                 '<tr class="main-room-element">' +
-                '<tr><td><label for="floor">pow Podłogi:</label></td><td><input id="floor" type="number" value="0"></td>' +
-                '<tr><td><label for="floor">pow Ścian:</label></td><td><input id="floor" type="text" value="0"></td>' +
+                '<tr><td><label for="floor">pow Podłogi:</label></td><td><input id="floor" type="number" value="0"></td></tr>' +
+                '<tr><td><label for="wall">pow Ścian:</label></td><td><input id="wall" type="text" value="0"></td></tr>' +
                 '</tr>' +
                 '<tr>' +
                 '<td class="delete-room-button btn btn-primary">Usuń pomieszczenie</td>' +
@@ -105,7 +106,7 @@
             return default_room
         }
 
-
+        // Obluga przyciskow dodawania pomieszczen
         $('.btn').click(function () {
             if ($(this).attr("class") === "room-button btn btn-info") {
 
@@ -115,15 +116,17 @@
             }
         })
 
+
+        // Przycisk usuwajacy pomieszczenie
         $(".room-section").on("click", ".delete-room-button", function (e) {
-            console.log($(e.target).closest("div").parent().remove())
+            $(e.target).closest("div").parent().remove()
+        });
+
+        $(".room-section").on("blur", "#floor", function (e) {
+            let floor_value = $(e.target).val()
+            console.log($(e.target).closest("tr").next().find("#wall").val(floor_value*5))
         })
 
-        // $(".room-section").on("click", ".wall-room-button", function () {
-        //     console.log("dupa");
-        //     let field = $('<tr><td><label for="wall">Ściana: </label><input id="wall" type="number" value="0"></td><td class="btn btn-secondary">Del</td></tr>');
-        //     $(this).parent("tr").append(field.clone())
-        // })
     })
 </script>
 
