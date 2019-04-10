@@ -119,3 +119,9 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATIC_ROOT = ["/home/marcin/Desktop/projekty/Kalkulator-Adriana/andzy_calc/static"]
+
+
+# …
+# Configure Django App for Heroku.
+import django_heroku
+django_heroku.settings(locals())
