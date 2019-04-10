@@ -28,18 +28,13 @@
             margin: .75rem .5rem;
         }
 
-        .room-area, .ceiling-wall-area {
+        td[class^='room'], td[class^='bathroom'] {
             text-align: center;
-        }
-
-        td[class^='bathroom'] {
-            text-align: center
         }
 
         h4 {
             font-size: 1.5em
         }
-
     </style>
 
 </head>
@@ -102,22 +97,22 @@
                 '<tr><td><label for="floor">Szerokosc pomieszczenia:</label></td><td><input id="room-width" type="number" value="0"></td></tr>' +
                 '<tr><td><label for="floor">Długość pomieszczenia:</label></td><td><input id="room-length" type="number" value="0"></td></tr>' +
                 '<tr><td><label for="floor">Wysokość sufitu:</label></td><td><input id="room-ceiling-height" type="number" value="0"></td></tr>' +
-                '</tr>' +
+                '<tr>' +
                 '<tr><td><label for="floor">Powierzchnia podłogi:</label></td><td class="room-area"></td></tr>' +
                 '<tr><td><label for="floor">Powierzchnia ścian i sufitu:</label></td><td class="ceiling-wall-area"></td></tr>' +
-                '<tr>'
+                '</tr>'
 
             let bathroom =
                 '<tr><td><label for="floor">Szerokosc łazienki:</label></td><td><input id="bathroom-width" type="number" value="0"></td></tr>' +
                 '<tr><td><label for="floor">Długość łazienki:</label></td><td><input id="bathroom-length" type="number" value="0"></td></tr>' +
                 '<tr><td><label for="floor">Wysokość kafelek:</label></td><td><input id="bathroom-tiles-height" type="number" value="0"></td></tr>' +
                 '<tr><td><label for="floor">Wysokość sufitu:</label></td><td><input id="bathroom-ceiling-height" type="number" value="0"></td></tr>' +
-                '</tr>' +
+                '<tr>' +
                 '<tr><td><label for="floor">Powierzchnia podłogi:</label></td><td class="bathroom-floor-area"></td></tr>' +
                 '<tr><td><label for="floor">Powierzchnia kafelek:</label></td><td class="bathroom-tiles-area"></td></tr>' +
                 '<tr><td><label for="floor">Powierzchnia scian i sufitu:</label></td><td class="bathroom-wall-area"></td></tr>' +
                 '<tr><td><label for="floor">Powierzchnia pustych scian i sufitu:</label></td><td class="bathroom-empty-area"></td></tr>' +
-                '<tr>'
+                '</tr>'
 
             var default_room = $(`
                 <div class="card flex-md-row mb-2 box-shadow bg-light h-md-250">
@@ -157,29 +152,29 @@
         // Pomieszczenie
         $(".room-section").on("blur", "input[id^='room']", function (e) {
             var room_area = $("#room-width").val() * $("#room-length").val()
-            if ($("#room-ceiling-height").val() != 0){
-                var walls_ceiling_area = 2*($("#room-width").val() * $("#room-ceiling-height").val()) + 2*($("#room-length").val() * $("#room-ceiling-height").val()) + room_area;
-                $(this).closest("tbody").find(".ceiling-wall-area").text((walls_ceiling_area/10000).toFixed(2));
+            if ($("#room-ceiling-height").val() != 0) {
+                var walls_ceiling_area = 2 * ($("#room-width").val() * $("#room-ceiling-height").val()) + 2 * ($("#room-length").val() * $("#room-ceiling-height").val()) + room_area;
+                $(this).closest("tbody").find(".ceiling-wall-area").text((walls_ceiling_area / 10000).toFixed(2));
             }
-            $(this).closest("tbody").find(".room-area").text((room_area/10000).toFixed(2));
+            $(this).closest("tbody").find(".room-area").text((room_area / 10000).toFixed(2));
         });
 
         // Lazienka
         $(".room-section").on("blur", "input[id^='bathroom']", function (e) {
             console.log("dupa")
             var room_area = $("#bathroom-width").val() * $("#bathroom-length").val()
-            if ($("#bathroom-tiles-height").val() != 0){
-                let tiles_area = 2*($("#bathroom-width").val() * $("#bathroom-tiles-height").val()) + 2*($("#bathroom-length").val() * $("#bathroom-tiles-height").val())
-                $(this).closest("tbody").find(".bathroom-tiles-area").text((tiles_area/10000).toFixed(2));
+            if ($("#bathroom-tiles-height").val() != 0) {
+                let tiles_area = 2 * ($("#bathroom-width").val() * $("#bathroom-tiles-height").val()) + 2 * ($("#bathroom-length").val() * $("#bathroom-tiles-height").val())
+                $(this).closest("tbody").find(".bathroom-tiles-area").text((tiles_area / 10000).toFixed(2));
             }
-            if ($("#bathroom-ceiling-height").val() != 0){
-                let tiles_area = 2*($("#bathroom-width").val() * $("#bathroom-tiles-height").val()) + 2*($("#bathroom-length").val() * $("#bathroom-tiles-height").val())
-                let walls_ceiling_area = 2*($("#bathroom-width").val() * $("#bathroom-ceiling-height").val()) + 2*($("#bathroom-length").val() * $("#bathroom-ceiling-height").val()) + room_area;
-                $(this).closest("tbody").find(".bathroom-wall-area").text((walls_ceiling_area/10000).toFixed(2));
-                $(this).closest("tbody").find(".bathroom-empty-area").text(((walls_ceiling_area-tiles_area)/10000).toFixed(2));
+            if ($("#bathroom-ceiling-height").val() != 0) {
+                let tiles_area = 2 * ($("#bathroom-width").val() * $("#bathroom-tiles-height").val()) + 2 * ($("#bathroom-length").val() * $("#bathroom-tiles-height").val())
+                let walls_ceiling_area = 2 * ($("#bathroom-width").val() * $("#bathroom-ceiling-height").val()) + 2 * ($("#bathroom-length").val() * $("#bathroom-ceiling-height").val()) + room_area;
+                $(this).closest("tbody").find(".bathroom-wall-area").text((walls_ceiling_area / 10000).toFixed(2));
+                $(this).closest("tbody").find(".bathroom-empty-area").text(((walls_ceiling_area - tiles_area) / 10000).toFixed(2));
             }
 
-            $(this).closest("tbody").find(".bathroom-floor-area").text((room_area/10000).toFixed(2));
+            $(this).closest("tbody").find(".bathroom-floor-area").text((room_area / 10000).toFixed(2));
         })
 
     })
