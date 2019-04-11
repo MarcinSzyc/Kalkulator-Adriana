@@ -2,4 +2,4 @@ from django.apps import AppConfig
 
 
 class AndzyCalcConfig(AppConfig):
-    name = 'andzy_calc'
+    name = 'andzy_rest'

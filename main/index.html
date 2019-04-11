@@ -8,6 +8,8 @@
             integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
             crossorigin="anonymous"></script>
 
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -23,6 +25,10 @@
             /*!*text-align:justify*!*/
         }
 
+        label {
+            color: #8a8910;
+        }
+
         .btn {
             min-width: 30%;
             margin: .75rem .5rem;
@@ -35,6 +41,12 @@
         h4 {
             font-size: 1.5em
         }
+
+        table[class="table room-section"] > * {
+            padding: 10px;
+            flex: 1 100%;
+        }
+
     </style>
 
 </head>
@@ -63,16 +75,16 @@
 </header>
 <div class="container">
     <div class="row mb-2">
-        <div class="col-md-3">
-            <div class="card flex-md-row mb-2 box-shadow h-md-250 text-white bg-dark">
+        <div class="col-sm-3">
+            <div class="card flex-sm-row mb-2 box-shadow h-md-250 text-white bg-dark">
                 <div class="card-body d-flex flex-column align-items-center">
                     <table class="table room-type">
-                        <thead><h4>Dodaj pomieszczenie:</h4></thead>
+                        <thead><h4 style="text-align: center">Dodaj pomieszczenie:</h4></thead>
                         <tbody>
-                        <tr>
+                        <tr style="text-align: center">
                             <td class="room-button btn btn-info">Pomieszczenie</td>
                         </tr>
-                        <tr>
+                        <tr style="text-align: center">
                             <td class="bathroom-button btn btn-secondary">Łazienka</td>
                         </tr>
                         </tbody>
@@ -80,16 +92,57 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-6">
-            <table>
-                <tbody class="room-section"></tbody>
-            </table>
+        <div class="col-sm-6">
+            <div class="card flex-sm-row mb-2 box-shadow h-md-250 text-white bg-dark">
+                <div class="card-body d-flex flex-column align-items-center" style="overflow: hidden">
+                    <div class="table-responsive-sm">
+                        <table class="table room-section">
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <div class="card flex-sm-row mb-2 box-shadow h-md-250 text-white bg-dark">
+                <div class="card-body d-flex flex-column align-items-center">
+                    <div class="table-responsive-sm">
+                        <table class="table">
+                            <thead class="thead-dark"><h4 style="text-align: center">Baza danych:</h4></thead>
+                            <tbody class="database">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
 <script type="text/javascript">
     $(document).ready(function () {
+
+        function load_db(result) {
+            for (var i = 0; i < result.length; i++) {
+                var tr = $("<tr>");
+                tr.append($(`<td>${result[i].nazwa}</td>`));
+                tr.append($(`<td>${result[i].opis}</td>`));
+                tr.append($(`<td>${result[i].cena}</td>`));
+                $(".filled").append(tr);
+            }
+            $("tbody tr:odd").addClass("table-info")
+        }
+
+        //Ajax
+        function ajax_querry(id, type, data) {
+
+            var result = $.ajax({
+                url: `https://andzy-rest.herokuapp.com/products/${id}`,
+                data: data,
+                type: type,
+                dataType: "json"
+            });
+            return result
+        }
 
         // Element pomieszczenia
         function room_type(name) {
@@ -99,7 +152,7 @@
                 '<tr><td><label for="floor">Wysokość sufitu:</label></td><td><input id="room-ceiling-height" type="number" value="0"></td></tr>' +
                 '<tr>' +
                 '<tr><td><label for="floor">Powierzchnia podłogi:</label></td><td class="room-area"></td></tr>' +
-                '<tr><td><label for="floor">Powierzchnia ścian i sufitu:</label></td><td class="ceiling-wall-area"></td></tr>' +
+                '<tr><td><label for="floor">Powierzchnia ścian i sufitu:</label></td><td class="room-ceiling-wall-area"></td></tr>' +
                 '</tr>'
 
             let bathroom =
@@ -115,22 +168,26 @@
                 '</tr>'
 
             var default_room = $(`
-                <div class="card flex-md-row mb-2 box-shadow bg-light h-md-250">
-                <div class="card-body d-flex flex-column align-items-center">
-                <table class="table-result">
-                <thead>${name}</thead>
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col" colspan="2">${name}</th>
+                    </tr>
+                </thead>
                 <tbody>
-                <tr class="main-room-element">` +
+                    <tr class="main-room-element">` +
                 `${name === "Pomieszczenie" ? room : bathroom}` +
                 `<td class="delete-room-button btn btn-primary">Usuń pomieszczenie</td>
-                </tr>
-                </tbody>
-                </table>
-                </div>
-                </div>`);
+                    </tr>
+                </tbody>`);
             return default_room
         }
 
+        //Lista elementow bazy danych
+
+        ajax_querry(id = "", "GET", data = undefined)
+            .done(function (result) {
+                load_db(result)
+            })
 
         // Obluga przyciskow dodawania pomieszczen
         $('.btn').click(function () {
@@ -154,7 +211,7 @@
             var room_area = $("#room-width").val() * $("#room-length").val()
             if ($("#room-ceiling-height").val() != 0) {
                 var walls_ceiling_area = 2 * ($("#room-width").val() * $("#room-ceiling-height").val()) + 2 * ($("#room-length").val() * $("#room-ceiling-height").val()) + room_area;
-                $(this).closest("tbody").find(".ceiling-wall-area").text((walls_ceiling_area / 10000).toFixed(2));
+                $(this).closest("tbody").find(".room-ceiling-wall-area").text((walls_ceiling_area / 10000).toFixed(2));
             }
             $(this).closest("tbody").find(".room-area").text((room_area / 10000).toFixed(2));
         });
